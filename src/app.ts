@@ -3,9 +3,10 @@ import helmet from 'helmet';
 import bcrypt from 'bcryptjs';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import session from 'express-session';
 import mongoose from 'mongoose';
 import router from './router';
+import passport from 'passport';
+import authRouter from './auth';
 
 dotenv.config();
 
@@ -18,14 +19,7 @@ app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(morgan('dev')); // Logging requests
 
-// Express Session
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'secret',
-    resave: false,
-    saveUninitialized: true
-  })
-);
+app.use(passport.initialize());
 
 // Mongoose
 mongoose.connect(process.env.MONGODB || 'mongodb://localhost:27017/myapp');
@@ -37,6 +31,7 @@ db.once('open', () => {
 
 // Routes
 app.use('/', router);
+app.use('/auth', authRouter);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
