@@ -32,6 +32,7 @@ db.once('open', () => {
 // Routes
 app.use('/', router);
 app.use('/auth', authRouter);
+app.use('/admin', passport.authenticate('jwt', { session: false }));
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
