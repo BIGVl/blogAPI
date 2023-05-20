@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import User from '../user/userModel';
@@ -13,10 +13,19 @@ authRouter.post('/signup', [
     .isAlphanumeric()
     .isLength({ min: 3, max: 16 })
     .escape(),
-  body('password').trim().isAlphanumeric().isLength({ min: 8, max: 32 }).escape(),
+  body('password')
+    .trim()
+    .isLength({ min: 8, max: 32 })
+    .withMessage('The password needs to be at least 8 characters long.')
+    .matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*()_\-+=])[A-Za-z0-9!@#$%^&*()_\-+=]+$/)
+    .withMessage(
+      'The password needs to contain at least 1 upppercase letter, 1 lowercase letter, 1 number and 1 special character.'
+    )
+    .escape(),
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     const { username, password } = req.body;
+    console.log(username, password);
     console.log(errors);
     if (!errors.isEmpty()) return res.send({ errors: errors.array() });
 
@@ -33,16 +42,14 @@ authRouter.post('/signup', [
     bcrypt.hash(password, 10, async (err, hashedPass) => {
       if (err) return res.send({ msg: 'Error occured during password hashing', err });
       user.password = hashedPass;
-      try {
-        await user.save();
-        delete user.password;
-        const SECRET = process.env.SECRET || 'randomSecret';
-        const token = jwt.sign(user, SECRET, { expiresIn: '1h' });
-        res.cookie('jwt', token, { httpOnly: true, secure: true });
-        return res.redirect('/admin/create-article');
-      } catch (err) {
-        return res.status(500).json({ error: err, msg: 'Internal error.' });
-      }
+      await user.save();
+
+      const SECRET = process.env.SECRET || 'randomSecret';
+      const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+
+      res.cookie('jwt', token, { httpOnly: true, secure: true });
+      return res.send({ msg: 'User created', token });
+      //return res.redirect('/admin/create-article');
     });
   }
 ]);
@@ -54,7 +61,7 @@ authRouter.post('/login', [
     .isAlphanumeric()
     .isLength({ min: 3, max: 16 })
     .escape(),
-  body('password').trim().isAlphanumeric().isLength({ min: 8, max: 32 }).escape(),
+  body('password', 'The password needs to be at least 8 characters long.').trim().isLength({ min: 8, max: 32 }).escape(),
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     const { username, password } = req.body;
@@ -68,15 +75,13 @@ authRouter.post('/login', [
 
     const SECRET = process.env.SECRET || 'randomSecret';
     bcrypt.compare(password, existingUser.password as string, function (error, resolved) {
-      if (!resolved) return res.status(400).send({ error: 'The username or password is incorrect.' });
+      if (error) return;
+      if (!resolved) return res.status(400).send({ error: 'The username or password is in 1rect.' });
 
-      try {
-        const token = jwt.sign(existingUser, SECRET, { expiresIn: '1h' });
-        res.cookie('jwt', token, { httpOnly: true, secure: true });
-        return res.redirect('/admin/create-article');
-      } catch (err) {
-        return res.status(500).json({ error: error, msg: 'Internal server error.' });
-      }
+      const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+      res.cookie('jwt', token, { httpOnly: true });
+      return res.send({ msg: 'You are logged in .', token });
+      //return res.redirect('/admin/create-article');
     });
   }
 ]);

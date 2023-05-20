@@ -11,7 +11,7 @@ import authRouter from './auth';
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 8000;
 
 // Middleware
 app.use(helmet()); // Helmet for security headers
@@ -37,7 +37,7 @@ app.use('/admin', passport.authenticate('jwt', { session: false }));
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
-  res.status(500).json({ error: 'Internal Server Error' });
+  return res.status(500).json({ msg: 'Internal Server Error' });
 });
 
 // Start the server
