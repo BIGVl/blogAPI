@@ -1,7 +1,8 @@
 import { Request, Response, Router } from 'express';
-import { body, matchedData, validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import User from '../user/userModel';
+import jwt from 'jsonwebtoken';
 
 const authRouter = Router();
 
@@ -32,8 +33,14 @@ authRouter.post('/signup', [
     bcrypt.hash(passsword, 10, async (err, hashedPass) => {
       if (err) return res.send({ msg: 'Error occured during password hashing', err });
       user.password = hashedPass;
-      await user.save();
-      return res.send('You entered the correct format');
+      try {
+        await user.save();
+        const SECRET = process.env.SECRET || 'randomSecret';
+        const token = jwt.sign(username, SECRET);
+        return res.send('You entered the correct format');
+      } catch (err) {
+        return res.status(500).json({ error: err, msg: 'Internal error.' });
+      }
     });
   }
 ]);
