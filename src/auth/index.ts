@@ -25,8 +25,7 @@ authRouter.post('/signup', [
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     const { username, password } = req.body;
-    console.log(username, password);
-    console.log(errors);
+
     if (!errors.isEmpty()) return res.send({ errors: errors.array() });
 
     const user = new User({
@@ -35,7 +34,6 @@ authRouter.post('/signup', [
     });
 
     const existingUser = await User.findOne({ username });
-    console.log(existingUser);
 
     if (existingUser) return res.send('Username already in use.');
 
@@ -44,12 +42,11 @@ authRouter.post('/signup', [
       user.password = hashedPass;
       await user.save();
 
-      const SECRET = process.env.SECRET || 'randomSecret';
+      const SECRET = process.env.SECRET || 'secret';
       const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: '1h' });
 
       res.cookie('jwt', token, { httpOnly: true, secure: true });
       return res.send({ msg: 'User created', token });
-      //return res.redirect('/admin/create-article');
     });
   }
 ]);
@@ -73,15 +70,15 @@ authRouter.post('/login', [
     const user = await User.findOne({ username });
     if (!user) return res.status(400).send({ error: 'The user does not exist.' });
 
-    const SECRET = process.env.SECRET || 'randomSecret';
     bcrypt.compare(password, user.password as string, function (error, resolved) {
       if (error) return;
-      if (!resolved) return res.status(400).send({ error: 'The username or password is in 1rect.' });
+      if (!resolved) return res.status(400).send({ error: 'The username or password is incorrect.' });
 
+      const SECRET = process.env.SECRET || 'secret';
       const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: '1h' });
+      const decoded = jwt.decode(token);
       res.cookie('jwt', token, { httpOnly: true });
       return res.send({ msg: 'You are logged in .', token });
-      //return res.redirect('/admin/create-article');
     });
   }
 ]);

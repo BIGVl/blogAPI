@@ -8,6 +8,7 @@ export const postArticle = [
   body('content', 'The article must be at least 100 characters long.').trim().isLength({ min: 100 }).escape(),
   body('published').trim().exists().escape(),
   async (req: Request, res: Response) => {
+    console.log('req.user', req.user);
     const errors = validationResult(req);
     const { title, timestamp, content, published } = req.body;
 

@@ -1,6 +1,14 @@
-import { Schema, model } from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
-const schema = new Schema({
+interface IUser extends Document {
+  id: string; // Make sure 'id' property is defined as required
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+const schema = new Schema<IUser>({
   username: String,
   password: String,
   firstName: String,
@@ -11,6 +19,6 @@ schema.virtual('fullName').get(function () {
   return `${this.firstName} ${this.lastName}`;
 });
 
-const User = model('User', schema);
+const User = model<IUser>('User', schema);
 
 export default User;
