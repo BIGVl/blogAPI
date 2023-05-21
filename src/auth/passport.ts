@@ -2,17 +2,19 @@ import passport from 'passport';
 import { ExtractJwt, Strategy as JwtStrategy, StrategyOptions } from 'passport-jwt';
 import User from '../user/userModel';
 
+const secret = process.env.SECRET || 'secret';
+
 const opts: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET
+  secretOrKey: secret
 };
 
 passport.use(
   new JwtStrategy(opts, async function (payload, done) {
     const response = await User.findOne({ id: payload.sub });
-    if (response) return done(null, response);
-    console.log(response);
-    return done(response, false);
+    if (response) return done(null, payload);
+    console.log(payload);
+    return done(payload, false);
   })
 );
 

@@ -1,3 +1,4 @@
+import './types';
 import express, { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import bcrypt from 'bcryptjs';
@@ -5,8 +6,9 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import router from './router';
-import passport from 'passport';
+import passport from './auth/passport';
 import authRouter from './auth';
+import articleRouter from './article/articleRouter';
 
 dotenv.config();
 
@@ -32,7 +34,7 @@ db.once('open', () => {
 // Routes
 app.use('/', router);
 app.use('/auth', authRouter);
-app.use('/admin', passport.authenticate('jwt', { session: false }));
+app.use('/posts', articleRouter);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

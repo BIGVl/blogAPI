@@ -4,9 +4,10 @@ const schema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   title: String,
   timestamp: Date,
-  content: String
+  content: String,
+  published: Boolean
 });
 
-const Post = model('Post', schema);
+const Article = model('Article', schema);
 
-export default Post;
+export default Article;

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import User from '../user/userModel';
@@ -45,7 +45,7 @@ authRouter.post('/signup', [
       await user.save();
 
       const SECRET = process.env.SECRET || 'randomSecret';
-      const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: '1h' });
 
       res.cookie('jwt', token, { httpOnly: true, secure: true });
       return res.send({ msg: 'User created', token });
@@ -70,15 +70,15 @@ authRouter.post('/login', [
     if (!errors.isEmpty()) return res.status(400).send({ errors: errors.array() });
 
     //The user exists
-    const existingUser = await User.findOne({ username });
-    if (!existingUser) return res.status(400).send({ error: 'The user does not exist.' });
+    const user = await User.findOne({ username });
+    if (!user) return res.status(400).send({ error: 'The user does not exist.' });
 
     const SECRET = process.env.SECRET || 'randomSecret';
-    bcrypt.compare(password, existingUser.password as string, function (error, resolved) {
+    bcrypt.compare(password, user.password as string, function (error, resolved) {
       if (error) return;
       if (!resolved) return res.status(400).send({ error: 'The username or password is in 1rect.' });
 
-      const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: '1h' });
       res.cookie('jwt', token, { httpOnly: true });
       return res.send({ msg: 'You are logged in .', token });
       //return res.redirect('/admin/create-article');
