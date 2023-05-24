@@ -14,10 +14,10 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 // Middleware
-app.use(helmet()); // Helmet for security headers
-app.use(express.json()); // Parse JSON bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-app.use(morgan('dev')); // Logging requests
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 app.use(passport.initialize());
 
 // Mongoose
@@ -31,12 +31,13 @@ db.once('open', () => {
 // Routes
 app.use('/', router);
 app.use('/auth', authRouter);
-app.use('/posts', articleRouter);
+app.use('/articles', articleRouter);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
-  return res.status(500).json({ msg: 'Internal Server Error' });
+  const message = err.message || 'Internal Server Error';
+  return res.status(500).json({ error: message });
 });
 
 // Start the server
