@@ -6,7 +6,8 @@ const schema = new Schema({
   createdAt: Date,
   content: String,
   published: Boolean,
-  lastUpdate: Date
+  lastUpdate: Date,
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 const Article = model('Article', schema);
