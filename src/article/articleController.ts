@@ -3,15 +3,16 @@ import Article from './articleModel';
 
 //Post article
 export const postArticle = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, createdAt, content, published } = req.body;
+  const { title, content, published } = req.body;
+  const createdAt = new Date();
 
   const foundArticle = await Article.findOne({ title });
-  if (foundArticle) return res.send('The title of the article is already used.');
+  if (foundArticle) return res.status(400).json({ message: 'The title of the article is already used.' });
 
   try {
     const newArticle = new Article({ author: req.user?.id, title, createdAt, content, published });
     await newArticle.save();
-    return res.status(200).send(`Article "${title}" successfully created!`);
+    return res.status(200).json({ message: `Article "${title}" successfully created!` });
   } catch (err) {
     return next(err);
   }
@@ -19,31 +20,50 @@ export const postArticle = async (req: Request, res: Response, next: NextFunctio
 
 //PUT/Update article
 export const updateArticle = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, createdAt, content, published } = req.body;
+  const { title, content, published } = req.body;
+  const { articleId } = req.params;
+  const lastUpdate = new Date();
 
   try {
-    await Article.findByIdAndUpdate(req.params.id, {
+    await Article.findByIdAndUpdate(articleId, {
       title,
-      createdAt,
       content,
-      published
+      published,
+      lastUpdate
     });
-    return res.status(200).send(`Article "${title}" updated with success.`);
+    return res.status(200).json({ message: `Article "${title}" updated with success.` });
   } catch (err) {
     return next(err);
   }
 };
 
 //Delete an article
-export const deleteArticle = async (req: Request, res: Response, next: NextFunction) => {};
+export const deleteArticle = async (req: Request, res: Response, next: NextFunction) => {
+  const { articleId } = req.params;
 
-//Get all posts, filter, sort, paginate
+  try {
+    const query = await Article.findByIdAndDelete(articleId);
+    console.log(query);
+    return res.status(200).json({ message: 'Article deleted .' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+//Get all articles and filter, sort, paginate
 export const getArticles = async (req: Request, res: Response, next: NextFunction) => {
   const { page, pageSize, sort, before, after } = req.query;
   const beforeDate = new Date(before as string);
   const afterDate = new Date(after as string);
 
-  const queryArticle = Article.find().populate('author', 'firstName lastName');
+  const projection = {
+    _id: 1,
+    createdAt: 1,
+    author: 1,
+    title: 1
+  };
+
+  const queryArticle = Article.find({}, projection).populate('author', 'firstName lastName');
   if (page && pageSize) {
     const startIndex = (Number(page) - 1) * Number(pageSize);
     queryArticle.skip(startIndex).limit(Number(pageSize));
@@ -52,9 +72,18 @@ export const getArticles = async (req: Request, res: Response, next: NextFunctio
   if (before) queryArticle.where('createdAt').gte(Number(beforeDate));
   if (after) queryArticle.where('createdAt').lte(Number(afterDate));
   try {
-    const findArticles = await queryArticle.exec();
-    return res.status(200).json({ articles: findArticles });
+    const foundArticles = await queryArticle.exec();
+    return res.status(200).json({ articles: foundArticles });
   } catch (err) {
     return next(err);
   }
+};
+
+//Get one article by it's id
+export const getArticleById = async (req: Request, res: Response, next: NextFunction) => {
+  const { articleId } = req.params;
+  const article = await Article.findById(articleId);
+
+  if (!article) return res.status(404).json({ message: 'Resource not found' });
+  return res.status(200).json({ article });
 };
