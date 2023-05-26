@@ -17,9 +17,3 @@ export const validateGetArticles = [
 ];
 
 //export const validateIdParam = [param('articleId').isInt().escape()];
-
-export const confirmValidation = (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.send({ errors: errors.array() });
-  next();
-};

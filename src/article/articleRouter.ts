@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { deleteArticle, getArticleById, getArticles, postArticle, updateArticle } from './articleController';
 import passport from 'passport';
-import { confirmValidation, validateGetArticles, validateTransformationOfArticle } from './validationMiddleware';
+import { validateGetArticles, validateTransformationOfArticle } from './validationMiddleware';
+import confirmValidation from '../middleware/confirmValidation';
 
 const articleRouter = Router();
 

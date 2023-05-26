@@ -10,7 +10,7 @@ export const postArticle = async (req: Request, res: Response, next: NextFunctio
   if (foundArticle) return res.status(400).json({ message: 'The title of the article is already used.' });
 
   try {
-    const newArticle = new Article({ author: req.user?.id, title, createdAt, content, published });
+    const newArticle = new Article({ author: req.user?.id, title, createdAt, content, published, comments: [] });
     await newArticle.save();
     return res.status(200).json({ message: `Article "${title}" successfully created!` });
   } catch (err) {
@@ -23,7 +23,6 @@ export const updateArticle = async (req: Request, res: Response, next: NextFunct
   const { title, content, published } = req.body;
   const { articleId } = req.params;
   const lastUpdate = new Date();
-
   try {
     await Article.findByIdAndUpdate(articleId, {
       title,
@@ -31,7 +30,7 @@ export const updateArticle = async (req: Request, res: Response, next: NextFunct
       published,
       lastUpdate
     });
-    return res.status(200).json({ message: `Article "${title}" updated with success.` });
+    return res.status(200).json({ message: `Article ${title} updated with success.` });
   } catch (err) {
     return next(err);
   }
@@ -82,7 +81,7 @@ export const getArticles = async (req: Request, res: Response, next: NextFunctio
 //Get one article by it's id
 export const getArticleById = async (req: Request, res: Response, next: NextFunction) => {
   const { articleId } = req.params;
-  const article = await Article.findById(articleId);
+  const article = await Article.findById(articleId).populate('author', 'firstName lastName').populate('comments');
 
   if (!article) return res.status(404).json({ message: 'Resource not found' });
   return res.status(200).json({ article });

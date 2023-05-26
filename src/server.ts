@@ -9,6 +9,7 @@ import router from './router';
 import passport from './auth/passport';
 import authRouter from './auth';
 import articleRouter from './article/articleRouter';
+import commentRouter from './comment/commentRouter';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -32,6 +33,7 @@ db.once('open', () => {
 app.use('/', router);
 app.use('/auth', authRouter);
 app.use('/articles', articleRouter);
+app.use('/articles/', commentRouter);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

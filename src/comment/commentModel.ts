@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 
 const schema = new Schema({
   author: String,
+  authorId: String,
   createdAt: Date,
   content: String,
   //We create the properties parentComment and children so each comment can be also commented on
@@ -9,13 +10,7 @@ const schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Comment',
     default: null
-  },
-  children: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Comment'
-    }
-  ]
+  }
 });
 
 const Comment = model('Comment', schema);
