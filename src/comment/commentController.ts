@@ -27,15 +27,28 @@ export const postComment = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const updateComment = async (req: Request, res: Response, next: NextFunction) => {
-  const { author, content, parentCommentId } = req.body;
+  const { authorId, content } = req.body;
   const { commentId } = req.params;
-  const comment = await Comment.findById(commentId);
-  if (!comment) return res.status(404).send('The user does not exist');
-  const id = comment._id.toString();
+  try {
+    const comment = await Comment.findOneAndUpdate({ _id: commentId, authorId }, { content });
+    if (!comment) return res.status(404).send('Comment not found');
+    return res.status(200).json({ message: 'Comment updated successfully' });
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
+};
 
-  bcrypt.compare(req.ip, id, (err, resolved) => {
-    if (err) return res.json({ errors: err });
-  });
+export const deleteComment = async (req: Request, res: Response, next: NextFunction) => {
+  const { authorId } = req.body;
+  const { commentId } = req.params;
 
-  return res.json({ comment });
+  try {
+    const comment = await Comment.findOneAndDelete({ authorId, _id: commentId });
+    if (!comment) return res.status(404).send('Comment not found');
+    return res.status(200).send('Message deleted successfully.');
+  } catch (error) {
+    console.log(error);
+    return next(error);
+  }
 };

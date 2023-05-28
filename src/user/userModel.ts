@@ -1,18 +1,21 @@
-import { Document, Schema, model } from 'mongoose';
+import { Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 interface IUser extends Document {
-  id: string; // Make sure 'id' property is defined as required
+  id: string;
   username: string;
   password: string;
   firstName: string;
   lastName: string;
+  isAdmin: number;
 }
 
 const schema = new Schema<IUser>({
   username: String,
   password: String,
   firstName: String,
-  lastName: String
+  lastName: String,
+  isAdmin: Number
 });
 
 schema.virtual('fullName').get(function () {

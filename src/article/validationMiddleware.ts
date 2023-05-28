@@ -1,5 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
-import { body, param, query, validationResult } from 'express-validator';
+import { body, param, query } from 'express-validator';
 
 export const validateTransformationOfArticle = [
   body('title', 'Title must be at least 3 characters long.').trim().isLength({ min: 3 }).escape(),
@@ -16,4 +15,4 @@ export const validateGetArticles = [
   query('after').optional().trim().isDate().escape()
 ];
 
-//export const validateIdParam = [param('articleId').isInt().escape()];
+export const validateIdParam = [param('articleId').escape()];

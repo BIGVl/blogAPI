@@ -1,8 +1,8 @@
 import { Request, Response, Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
-import User from '../user/userModel';
 import jwt from 'jsonwebtoken';
+import User from '../user/userModel';
 
 const authRouter = Router();
 
@@ -31,9 +31,8 @@ authRouter.post('/login', [
 
       const SECRET = process.env.SECRET || 'secret';
       const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: '1h' });
-      const decoded = jwt.decode(token);
-      res.cookie('jwt', token, { httpOnly: true });
-      return res.send({ msg: 'You are logged in .', token });
+
+      return res.cookie('jwt', token, { httpOnly: true }).send({ msg: 'You are logged in .' });
     });
   }
 ]);
