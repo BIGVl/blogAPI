@@ -32,7 +32,7 @@ authRouter.post('/login', [
       const SECRET = process.env.SECRET || 'secret';
       const token = jwt.sign({ username, id: user._id }, SECRET, { expiresIn: '1h' });
 
-      return res.cookie('jwt', token, { httpOnly: true }).send({ msg: 'You are logged in .' });
+      return res.cookie('jwt', token, { httpOnly: true, secure: true }).send({ msg: 'You are logged in .' });
     });
   }
 ]);

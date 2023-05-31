@@ -7,19 +7,28 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 import router from './router';
 import passport from './auth/passport';
-import authRouter from './auth';
+import authRouter from './auth/login';
 import articleRouter from './article/articleRouter';
 import commentRouter from './comment/commentRouter';
+import compression from 'compression';
 
 const app = express();
 const port = process.env.PORT || 8000;
 
 // Middleware
+app.use(compression());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(passport.initialize());
+//Production settings
+app.disable('x-powered-by');
+
+if (process.env.NODE_ENV === 'production') {
+  console.log = function () {};
+  console.error = function () {};
+}
 
 // Mongoose
 mongoose.connect(process.env.MONGODB || 'mongodb://localhost:27017/myapp');
