@@ -2,7 +2,7 @@
 
 ## API Base URL
 
-The API is accessible at `https://api.example.com` (replace with your API's base URL).
+The API is accessible at `https://blog-api-vlasandrei-com.onrender.com`.
 
 ### Authentication
 
