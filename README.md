@@ -136,13 +136,13 @@ Creates a new comment for an article.
 
 **Request Body:**
 
-```json
+
 {
   "author": "John Doe",
   "content": "This is a comment",
   "parentCommentId": "optional-parent-comment-id"
 }
-````
+  
 Response:
 
     Status: 200 (OK)
