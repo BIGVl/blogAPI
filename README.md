@@ -2,7 +2,7 @@
 
 ## API Base URL
 
-The API is accessible at `https://blog-api-vlasandrei-com.onrender.com`.
+The API is accessible [here](https://blog-api-vlasandrei-com.onrender.com).
 
 ### Authentication
 
