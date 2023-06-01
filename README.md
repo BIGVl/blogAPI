@@ -113,10 +113,12 @@ Updates an existing comment.
     Middleware: validateCommentBody, confirmValidation
 
 Request Body:
+````json
 {
   "authorId": "comment-author-id",
   "content": "Updated comment content"
 }
+````
 Certainly! Here's the documentation formatted as a Markdown text:
 
 markdown
@@ -137,13 +139,13 @@ Creates a new comment for an article.
 
 **Request Body:**
 
-
+````json
 {
   "author": "John Doe",
   "content": "This is a comment",
   "parentCommentId": "optional-parent-comment-id"
 }
-  
+````
 Response:
 
     Status: 200 (OK)
@@ -159,12 +161,12 @@ Updates an existing comment.
 
 Request Body:
 
-
+````json
 {
   "authorId": "comment-author-id",
   "content": "Updated comment content"
 }
-
+````
 Response:
 
     Status: 200 (OK)
@@ -179,10 +181,11 @@ Deletes an existing comment.
     Middleware: validateCommentToDelete, confirmValidation
 
 Request Body:
+  ````json
 {
   "authorId": "comment-author-id"
 }
-
+````
 Response:
 
     Status: 200 (OK)
