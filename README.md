@@ -98,6 +98,7 @@ Creates a new comment for an article.
   "content": "This is a comment",
   "parentCommentId": "optional-parent-comment-id"
 }
+````
 Response:
 
     Status: 200 (OK)
