@@ -142,7 +142,7 @@ Creates a new comment for an article.
   "content": "This is a comment",
   "parentCommentId": "optional-parent-comment-id"
 }
-
+````
 Response:
 
     Status: 200 (OK)
@@ -158,7 +158,6 @@ Updates an existing comment.
 
 Request Body:
 
-json
 
 {
   "authorId": "comment-author-id",
@@ -222,4 +221,4 @@ To use the comment feature in your application, follow these steps:
     Add the necessary validation middleware (validateCommentBody, validateCommentToDelete) to ensure the request data is valid.
     Implement the confirmValidation middleware to handle validation errors.
     Start your Express server and test the comment feature endpoints using an API testing tool or client.
-````
+
