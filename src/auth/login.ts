@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../user/userModel';
+import User from '../user/userModel.ts';
 
 const authRouter = Router();
 
@@ -19,7 +19,7 @@ authRouter.post('/login', [
     const { username, password } = req.body;
 
     //If validation does not passs
-    if (!errors.isEmpty()) return res.status(400).send({ errors: errors.array() });
+    if (!errors.isEmpty()) return res.status(400).send({ error: 'Error occured during authentication.' });
 
     //The user exists
     const user = await User.findOne({ username });

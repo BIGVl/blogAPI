@@ -5,12 +5,13 @@ import express, { Request, Response, NextFunction } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-import router from './router';
-import passport from './auth/passport';
-import authRouter from './auth/login';
-import articleRouter from './article/articleRouter';
-import commentRouter from './comment/commentRouter';
+import router from './router.ts';
+import passport from './auth/passport.ts';
+import authRouter from './auth/login.ts';
+import articleRouter from './article/articleRouter.ts';
+import commentRouter from './comment/commentRouter.ts';
 import compression from 'compression';
+import apiLimiter from './middleware/apiLimiter.ts';
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(passport.initialize());
+app.use('/', apiLimiter);
 //Production settings
 app.disable('x-powered-by');
 

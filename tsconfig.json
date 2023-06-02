@@ -3,6 +3,8 @@
     "target": "es6",
     "module": "NodeNext",
     "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true
