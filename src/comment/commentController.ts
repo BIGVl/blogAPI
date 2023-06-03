@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import Comment from './commentModel';
-import Article from '../article/articleModel';
+import Comment from './commentModel.ts';
+import Article from '../article/articleModel.ts';
 import bcrypt from 'bcryptjs';
 
 export const postComment = async (req: Request, res: Response, next: NextFunction) => {
