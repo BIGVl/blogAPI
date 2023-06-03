@@ -2,7 +2,7 @@
 
 ## API Base URL
 
-The API is accessible at `https://api.example.com` (replace with your API's base URL).
+The API is accessible at [https://blog-api-vlasandrei-com.onrender.com](https://blog-api-vlasandrei-com.onrender.com).
 
 ### Authentication
 
@@ -98,6 +98,7 @@ Creates a new comment for an article.
   "content": "This is a comment",
   "parentCommentId": "optional-parent-comment-id"
 }
+````
 Response:
 
     Status: 200 (OK)
@@ -112,10 +113,12 @@ Updates an existing comment.
     Middleware: validateCommentBody, confirmValidation
 
 Request Body:
+````json
 {
   "authorId": "comment-author-id",
   "content": "Updated comment content"
 }
+````
 Certainly! Here's the documentation formatted as a Markdown text:
 
 markdown
@@ -136,13 +139,13 @@ Creates a new comment for an article.
 
 **Request Body:**
 
-```json
+````json
 {
   "author": "John Doe",
   "content": "This is a comment",
   "parentCommentId": "optional-parent-comment-id"
 }
-
+````
 Response:
 
     Status: 200 (OK)
@@ -158,13 +161,12 @@ Updates an existing comment.
 
 Request Body:
 
-json
-
+````json
 {
   "authorId": "comment-author-id",
   "content": "Updated comment content"
 }
-
+````
 Response:
 
     Status: 200 (OK)
@@ -179,10 +181,11 @@ Deletes an existing comment.
     Middleware: validateCommentToDelete, confirmValidation
 
 Request Body:
+  ````json
 {
   "authorId": "comment-author-id"
 }
-
+````
 Response:
 
     Status: 200 (OK)
@@ -222,4 +225,4 @@ To use the comment feature in your application, follow these steps:
     Add the necessary validation middleware (validateCommentBody, validateCommentToDelete) to ensure the request data is valid.
     Implement the confirmValidation middleware to handle validation errors.
     Start your Express server and test the comment feature endpoints using an API testing tool or client.
-````
+
