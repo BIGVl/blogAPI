@@ -74,54 +74,6 @@ Authorization: Bearer <token>
 
 Note: Replace `:articleId` in the endpoints with the actual ID of the article.
 
-Please note that the frontend needs to handle authentication, error handling, and rendering/displaying the data received from the API according to your application's requirements and design.
-
-# BlogAPI - Comment Feature
-
-This is the documentation for the comment feature of the BlogAPI. The comment feature allows users to post, update, and delete comments on articles.
-
-## Comment Controller
-
-### `postComment`
-
-Creates a new comment for an article.
-
-- Method: POST
-- Route: `/:articleId/comments`
-- Middleware: `validateCommentBody`, `confirmValidation`
-
-**Request Body:**
-
-````json
-{
-  "author": "John Doe",
-  "content": "This is a comment",
-  "parentCommentId": "optional-parent-comment-id"
-}
-````
-Response:
-
-    Status: 200 (OK)
-    Body: JSON object containing the created comment
-
-updateComment
-
-Updates an existing comment.
-
-    Method: PUT
-    Route: /:articleId/comments/:commentId
-    Middleware: validateCommentBody, confirmValidation
-
-Request Body:
-````json
-{
-  "authorId": "comment-author-id",
-  "content": "Updated comment content"
-}
-````
-Certainly! Here's the documentation formatted as a Markdown text:
-
-markdown
 
 # BlogAPI - Comment Feature
 
@@ -215,14 +167,4 @@ Validates the request body and route parameters for deleting a comment.
 
     authorId: The ID of the comment author (string, required)
     commentId: The ID of the comment to be deleted (string, required)
-
-Usage
-
-To use the comment feature in your application, follow these steps:
-
-    Import the comment controller methods (postComment, updateComment, deleteComment) into your Express application.
-    Set up the comment routes in your Express application using the provided routes and corresponding controller methods.
-    Add the necessary validation middleware (validateCommentBody, validateCommentToDelete) to ensure the request data is valid.
-    Implement the confirmValidation middleware to handle validation errors.
-    Start your Express server and test the comment feature endpoints using an API testing tool or client.
 
