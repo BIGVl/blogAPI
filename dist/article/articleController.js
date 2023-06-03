@@ -13,17 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getArticleById = exports.getArticles = exports.deleteArticle = exports.updateArticle = exports.postArticle = void 0;
-const articleModel_1 = __importDefault(require("./articleModel"));
+const articleModel_ts_1 = __importDefault(require("./articleModel.ts"));
 //Post article
 const postArticle = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { title, content, published } = req.body;
     const createdAt = new Date();
-    const foundArticle = yield articleModel_1.default.findOne({ title });
+    const foundArticle = yield articleModel_ts_1.default.findOne({ title });
     if (foundArticle)
         return res.status(400).json({ message: 'The title of the article is already used.' });
     try {
-        const newArticle = new articleModel_1.default({ author: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id, title, createdAt, content, published, comments: [] });
+        const newArticle = new articleModel_ts_1.default({ author: (_a = req.user) === null || _a === void 0 ? void 0 : _a.id, title, createdAt, content, published, comments: [] });
         yield newArticle.save();
         return res.status(200).json({ message: `Article "${title}" successfully created!` });
     }
@@ -38,7 +38,7 @@ const updateArticle = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     const { articleId } = req.params;
     const lastUpdate = new Date();
     try {
-        yield articleModel_1.default.findByIdAndUpdate(articleId, {
+        yield articleModel_ts_1.default.findByIdAndUpdate(articleId, {
             title,
             content,
             published,
@@ -55,7 +55,7 @@ exports.updateArticle = updateArticle;
 const deleteArticle = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { articleId } = req.params;
     try {
-        const query = yield articleModel_1.default.findByIdAndDelete(articleId);
+        const query = yield articleModel_ts_1.default.findByIdAndDelete(articleId);
         console.log(query);
         return res.status(200).json({ message: 'Article deleted .' });
     }
@@ -75,7 +75,7 @@ const getArticles = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         author: 1,
         title: 1
     };
-    const queryArticle = articleModel_1.default.find({}, projection).populate('author', 'firstName lastName');
+    const queryArticle = articleModel_ts_1.default.find({}, projection).populate('author', 'firstName lastName');
     if (page && pageSize) {
         const startIndex = (Number(page) - 1) * Number(pageSize);
         queryArticle.skip(startIndex).limit(Number(pageSize));
@@ -98,7 +98,7 @@ exports.getArticles = getArticles;
 //Get one article by it's id
 const getArticleById = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { articleId } = req.params;
-    const article = yield articleModel_1.default.findById(articleId).populate('author', 'firstName lastName').populate('comments');
+    const article = yield articleModel_ts_1.default.findById(articleId).populate('author', 'firstName lastName').populate('comments');
     if (!article)
         return res.status(404).json({ message: 'Resource not found' });
     return res.status(200).json({ article });

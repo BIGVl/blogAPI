@@ -16,15 +16,19 @@ const login_1 = __importDefault(require("./auth/login"));
 const articleRouter_1 = __importDefault(require("./article/articleRouter"));
 const commentRouter_1 = __importDefault(require("./comment/commentRouter"));
 const compression_1 = __importDefault(require("compression"));
+const apiLimiter_1 = __importDefault(require("./middleware/apiLimiter"));
+const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8000;
 // Middleware
+app.use((0, cors_1.default)({ origin: 'http://localhost:5173' }));
 app.use((0, compression_1.default)());
 app.use((0, helmet_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, morgan_1.default)('dev'));
 app.use(passport_1.default.initialize());
+app.use('/', apiLimiter_1.default);
 //Production settings
 app.disable('x-powered-by');
 if (process.env.NODE_ENV === 'production') {

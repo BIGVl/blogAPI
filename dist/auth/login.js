@@ -31,7 +31,7 @@ authRouter.post('/login', [
         const { username, password } = req.body;
         //If validation does not passs
         if (!errors.isEmpty())
-            return res.status(400).send({ errors: errors.array() });
+            return res.status(400).send({ error: 'Error occured during authentication.' });
         //The user exists
         const user = yield userModel_1.default.findOne({ username });
         if (!user)

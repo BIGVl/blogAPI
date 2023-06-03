@@ -14,14 +14,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const passport_jwt_1 = require("passport-jwt");
-const userModel_1 = __importDefault(require("../user/userModel"));
+const userModel_ts_1 = __importDefault(require("../user/userModel.ts"));
 const secret = process.env.SECRET || 'secret';
 const opts = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: secret
 };
 passport_1.default.use(new passport_jwt_1.Strategy(opts, (payload, done) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield userModel_1.default.findById(payload.id);
+    const user = yield userModel_ts_1.default.findById(payload.id);
     console.log(`payload ${payload.id}`);
     console.log(user);
     if (user) {
