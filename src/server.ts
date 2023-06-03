@@ -18,7 +18,7 @@ const app = express();
 const port = process.env.PORT || 8000;
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(compression());
 app.use(helmet());
 app.use(express.json());
