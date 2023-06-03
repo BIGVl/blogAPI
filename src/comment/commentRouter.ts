@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { deleteComment, postComment, updateComment } from './commentController.ts';
-import { validateCommentBody, validateCommentToDelete } from './validationMiddleware.ts';
-import confirmValidation from '../middleware/confirmValidation.ts';
+import { deleteComment, postComment, updateComment } from './commentController';
+import { validateCommentBody, validateCommentToDelete } from './validationMiddleware';
+import confirmValidation from '../middleware/confirmValidation';
 
 const commentRouter = Router();
 

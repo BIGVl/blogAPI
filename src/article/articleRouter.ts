@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { deleteArticle, getArticleById, getArticles, postArticle, updateArticle } from './articleController.ts';
+import { deleteArticle, getArticleById, getArticles, postArticle, updateArticle } from './articleController';
 import passport from 'passport';
-import { validateGetArticles, validateIdParam, validateTransformationOfArticle } from './validationMiddleware.ts';
-import confirmValidation from '../middleware/confirmValidation.ts';
+import { validateGetArticles, validateIdParam, validateTransformationOfArticle } from './validationMiddleware';
+import confirmValidation from '../middleware/confirmValidation';
 
 const articleRouter = Router();
 

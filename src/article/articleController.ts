@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Article from './articleModel.ts';
+import Article from './articleModel';
 
 //Post article
 export const postArticle = async (req: Request, res: Response, next: NextFunction) => {
